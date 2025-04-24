@@ -3,6 +3,8 @@ const { ccclass, property } = _decorator;
 
 @ccclass("hallScenceMgr")
 export class hallScenceMgr extends Component {
+  @property(Node)
+  public createRoomBtn: Node;
   @property(Label)
   public nameLabel: Label;
   @property(Label)
@@ -16,5 +18,7 @@ export class hallScenceMgr extends Component {
     this.idLabel.string = "ID: " + globalThis.userInfo.id || "没得";
   }
   //点击创建房间
-  public onCreateRoom() {}
+  public onCreateRoom() {
+    this.createRoomBtn.active = true;
+  }
 }

@@ -1,17 +1,17 @@
 const ws = require('nodejs-websocket');
-const userRouter = require("./user")
+const hallRouter = require("./hall")
 
 /**
  * 负责登录服务器
  */
-class LoginMessage {
+class HallMessage {
     //实现单例方法
     static getInstance() {
-        if (!LoginMessage.instance) {
-            LoginMessage.instance = new LoginMessage()
-            return LoginMessage.instance
+        if (!HallMessage.instance) {
+            HallMessage.instance = new HallMessage()
+            return HallMessage.instance
         } else {
-            return LoginMessage.instance
+            return HallMessage.instance
         }
     }
     constructor() {
@@ -43,16 +43,14 @@ class LoginMessage {
 
 
         server.listen(port, () => {
-            console.log('登录服务启动: localhost:' + port + '');
+            console.log('大厅服务启动: localhost:' + port + '');
         })
     }
     //接受客户端消息
     resMessage(type, data, client) {
         switch (type) {
-            case 1: //登录
-                this.userLogin(data.id).then(res => {
-                    this.sendMessage(1, res, client)
-                })
+            case 1: //创建房间
+                this.createRoom(data)
                 break;
             case 2: //心跳
                 console.log('心跳消息', data);
@@ -67,32 +65,10 @@ class LoginMessage {
             data: data
         }))
     }
-    //用户登录了
-    userLogin(id) {
-        return new Promise((resolve, reject) => {
-            //查询用户信息
-            userRouter.getUserInfo(id).then(res => {
-                if (res) {
-                    resolve({
-                        code: 200,
-                        data: {
-                            data: res[0],
-                            message: '登录成功'
-                        }
-                    })
-                } else {
-                    resolve({
-                        code: 401,
-                        data: {
-                            data: null,
-                            message: '用户不存在'
-                        }
-                    })
-                }
-            })
-        })
-
+    //创建房间
+    createRoom(data) {
+        console.log('创建房间', data);
     }
 }
 
-module.exports = LoginMessage.getInstance()
+module.exports = HallMessage.getInstance()
